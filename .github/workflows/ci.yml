@@ -10,13 +10,6 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
-    steps:
-    - uses: actions/checkout@v2
-    - name: build
-      run: cargo build --verbose
-
   lint:
     runs-on: ubuntu-20.04
     steps:
