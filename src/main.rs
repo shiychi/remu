@@ -1,3 +1,5 @@
+use riscv_emu::emulator::Emulator;
+
 fn main() {
-    println!("Hello, world!");
+    let mut emulator = Emulator::new();
 }
