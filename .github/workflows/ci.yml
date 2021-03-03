@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: clippy
-      run: cargo clippy --verbose
+      run: RUSTFLAGS="-D warnings" cargo clippy --verbose
     - name: fmt
       run: cargo fmt --all -- --check --verbose
 
