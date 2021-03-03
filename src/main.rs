@@ -1,4 +1,4 @@
-use riscv_emu::emulator::Emulator;
+use remu::emulator::Emulator;
 use std::fs::File;
 use std::io::Read;
 
