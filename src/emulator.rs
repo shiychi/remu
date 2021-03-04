@@ -1,4 +1,5 @@
 use crate::cpu::Cpu;
+use anyhow::Result;
 
 #[derive(Default)]
 pub struct Emulator {
@@ -11,11 +12,13 @@ impl Emulator {
         self.memory = binary_v;
     }
 
-    pub fn start(&mut self) {
+    pub fn start(&mut self) -> Result<()> {
+        // TODO: add debug info
         while self.cpu.pc < self.memory.len() {
             let raw_inst = self.cpu.fetch(&self.memory);
-            let inst = self.cpu.decode(raw_inst).unwrap();
+            let inst = self.cpu.decode(raw_inst)?;
             self.cpu.execute(inst);
         }
+        Ok(())
     }
 }

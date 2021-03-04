@@ -1,7 +1,9 @@
-use crate::cpu::Cpu;
+use crate::cpu::{Cpu, DecodeError};
+use anyhow::Result;
 use std::convert::TryInto;
 
-pub fn parse(raw: u32) -> Result<Instruction, String> {
+// TODO: add tests
+pub fn parse(raw: u32) -> Result<Instruction> {
     let opcode = raw & 0b1111111;
 
     match opcode {
@@ -9,7 +11,7 @@ pub fn parse(raw: u32) -> Result<Instruction, String> {
             let inst = RTypeInstruction::default(raw);
             inst.parse()
         }
-        _ => Err("Unexpected opcode".into()),
+        _ => Err(DecodeError::OpcodeError(opcode as u8).into()),
     }
 }
 
@@ -71,14 +73,13 @@ impl RTypeInstruction {
         }
     }
 
-    // TODO: add error type
-    pub fn parse(self) -> Result<Instruction, String> {
+    pub fn parse(self) -> Result<Instruction> {
         match self.funct3 {
             0 => match self.funct7 {
                 0 => Ok(Instruction::Add(self)),
-                _ => Err("Unexpected funct7".into()),
+                _ => Err(DecodeError::Funct7Error(self.funct7).into()),
             },
-            _ => Err("Unexpected funct3".into()),
+            _ => Err(DecodeError::Funct3Error(self.funct3).into()),
         }
     }
 }

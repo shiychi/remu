@@ -1,6 +1,8 @@
 mod instruction;
 
+use anyhow::Result;
 use instruction::Instruction;
+use thiserror::Error;
 
 #[derive(Default)]
 pub struct Cpu {
@@ -19,7 +21,7 @@ impl Cpu {
         inst
     }
 
-    pub fn decode(&self, raw: u32) -> Result<Instruction, String> {
+    pub fn decode(&self, raw: u32) -> Result<Instruction> {
         instruction::parse(raw)
     }
 
@@ -28,4 +30,14 @@ impl Cpu {
             Instruction::Add(i) => instruction::add(self, i),
         }
     }
+}
+
+#[derive(Error, Debug)]
+pub enum DecodeError {
+    #[error("Unexpected opcode: 0x{0:x}")]
+    OpcodeError(u8),
+    #[error("Unexpected funct3: {0}")]
+    Funct3Error(u8),
+    #[error("Unexpected funct7: {0}")]
+    Funct7Error(u8),
 }
