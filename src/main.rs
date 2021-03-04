@@ -14,5 +14,6 @@ fn main() {
     let mut emulator = Emulator::default();
     emulator.write_binary(binary);
     let raw_inst = cpu.fetch(&emulator.memory);
-    let _inst = cpu.decode(raw_inst).unwrap();
+    let inst = cpu.decode(raw_inst).unwrap();
+    cpu.execute(inst);
 }

@@ -1,3 +1,4 @@
+use crate::cpu::Cpu;
 use std::convert::TryInto;
 
 pub fn parse(raw: u32) -> Result<Instruction, String> {
@@ -80,4 +81,10 @@ impl RTypeInstruction {
             _ => Err("Unexpected funct3".into()),
         }
     }
+}
+
+pub fn add(cpu: &mut Cpu, i: RTypeInstruction) {
+    let rs1 = cpu.register[i.rs1 as usize];
+    let rs2 = cpu.register[i.rs2 as usize];
+    cpu.register[i.rd as usize] = rs1 + rs2;
 }

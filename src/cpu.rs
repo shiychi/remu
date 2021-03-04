@@ -19,7 +19,13 @@ impl Cpu {
         inst
     }
 
-    pub fn decode(self, raw: u32) -> Result<Instruction, String> {
+    pub fn decode(&self, raw: u32) -> Result<Instruction, String> {
         instruction::parse(raw)
+    }
+
+    pub fn execute(&mut self, inst: Instruction) {
+        match inst {
+            Instruction::Add(i) => instruction::add(self, i),
+        }
     }
 }
