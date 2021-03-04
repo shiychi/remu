@@ -1,4 +1,6 @@
-use crate::instruction::{self, Instruction};
+mod instruction;
+
+use instruction::Instruction;
 
 #[derive(Default)]
 pub struct Cpu {
