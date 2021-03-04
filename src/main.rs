@@ -10,7 +10,9 @@ fn main() {
     binary_file
         .read_to_end(&mut binary)
         .expect("failed to read file");
-    let cpu = Cpu::default();
+    let mut cpu = Cpu::default();
     let mut emulator = Emulator::default();
     emulator.write_binary(binary);
+    let raw_inst = cpu.fetch(&emulator.memory);
+    let inst = cpu.decode(raw_inst).unwrap();
 }
