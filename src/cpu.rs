@@ -1,7 +1,5 @@
-mod instruction;
-
+use crate::instruction::{self, Instruction};
 use anyhow::Result;
-use instruction::Instruction;
 use thiserror::Error;
 
 #[derive(Default)]
