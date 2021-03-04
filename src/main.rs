@@ -1,4 +1,3 @@
-use remu::cpu::Cpu;
 use remu::emulator::Emulator;
 use std::fs::File;
 use std::io::Read;
@@ -10,10 +9,7 @@ fn main() {
     binary_file
         .read_to_end(&mut binary)
         .expect("failed to read file");
-    let mut cpu = Cpu::default();
     let mut emulator = Emulator::default();
     emulator.write_binary(binary);
-    let raw_inst = cpu.fetch(&emulator.memory);
-    let inst = cpu.decode(raw_inst).unwrap();
-    cpu.execute(inst);
+    emulator.start();
 }
