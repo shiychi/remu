@@ -7,7 +7,7 @@ pub struct Cpu {
 }
 
 impl Cpu {
-    pub fn fetch(&mut self, memory: &Vec<u8>) -> u32 {
+    pub fn fetch(&mut self, memory: &[u8]) -> u32 {
         let mut inst: u32 = 0;
         for i in 0..4 {
             let e: u32 = memory[self.pc + (3 - i)].into();
