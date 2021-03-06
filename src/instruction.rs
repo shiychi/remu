@@ -93,7 +93,7 @@ impl ITypeInstruction {
         let rd: u8 = ((raw >> 7) & 0b11111).try_into().unwrap();
         let funct3: u8 = ((raw >> 12) & 0b111).try_into().unwrap();
         let rs1: u8 = ((raw >> 15) & 0b11111).try_into().unwrap();
-        let imm: u32 = (raw >> 20).try_into().unwrap();
+        let imm: u32 = raw >> 20;
 
         Self {
             opcode: 0x13,
