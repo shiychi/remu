@@ -30,6 +30,7 @@ impl Cpu {
     pub fn execute(&mut self, inst: Instruction) {
         match inst {
             Instruction::Add(i) => instruction::add(self, i),
+            Instruction::Addi(i) => instruction::addi(self, i),
         }
     }
 }
@@ -74,6 +75,33 @@ mod tests {
             [
                 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 2, 0, 6,
+            ]
+        );
+    }
+
+    #[test]
+    fn test_addi_instruction() {
+        let mut cpu = Cpu::new();
+
+        let inst = cpu.decode(0x01730293).unwrap();
+        assert_eq!(
+            inst,
+            Instruction::Addi(ITypeInstruction {
+                opcode: 0x13,
+                funct3: 0,
+                rd: 5,
+                rs1: 6,
+                imm: 23
+            })
+        );
+
+        cpu.register[6] = 7; // rs1
+        cpu.execute(inst);
+        assert_eq!(
+            cpu.register,
+            [
+                0, 0, 0, 0, 0, 30, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0,
             ]
         );
     }

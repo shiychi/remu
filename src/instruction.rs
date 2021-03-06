@@ -10,6 +10,10 @@ pub fn parse(raw: u32) -> Result<Instruction> {
             let inst = RTypeInstruction::new(raw);
             inst.parse()
         }
+        0x13 => {
+            let inst = ITypeInstruction::new(raw);
+            inst.parse()
+        }
         _ => Err(DecodeError::OpcodeError(opcode as u8).into()),
     }
 }
@@ -17,6 +21,7 @@ pub fn parse(raw: u32) -> Result<Instruction> {
 #[derive(Debug, PartialEq)]
 pub enum Instruction {
     Add(RTypeInstruction),
+    Addi(ITypeInstruction),
 }
 
 #[derive(Debug, PartialEq)]
@@ -30,7 +35,7 @@ pub struct RTypeInstruction {
 }
 
 #[derive(Debug, PartialEq)]
-pub struct _ITypeInstruction {
+pub struct ITypeInstruction {
     pub opcode: u8,
     pub funct3: u8,
     pub rd: u8,
@@ -83,8 +88,38 @@ impl RTypeInstruction {
     }
 }
 
+impl ITypeInstruction {
+    pub fn new(raw: u32) -> Self {
+        let rd: u8 = ((raw >> 7) & 0b11111).try_into().unwrap();
+        let funct3: u8 = ((raw >> 12) & 0b111).try_into().unwrap();
+        let rs1: u8 = ((raw >> 15) & 0b11111).try_into().unwrap();
+        let imm: u32 = (raw >> 20).try_into().unwrap();
+
+        Self {
+            opcode: 0x13,
+            funct3,
+            rd,
+            rs1,
+            imm,
+        }
+    }
+
+    pub fn parse(self) -> Result<Instruction> {
+        match self.funct3 {
+            0 => Ok(Instruction::Addi(self)),
+            _ => Err(DecodeError::Funct3Error(self.funct3).into()),
+        }
+    }
+}
+
 pub fn add(cpu: &mut Cpu, i: RTypeInstruction) {
     let rs1 = cpu.register[i.rs1 as usize];
     let rs2 = cpu.register[i.rs2 as usize];
     cpu.register[i.rd as usize] = rs1 + rs2;
+}
+
+pub fn addi(cpu: &mut Cpu, i: ITypeInstruction) {
+    let rs1 = cpu.register[i.rs1 as usize];
+    let imm = i.imm;
+    cpu.register[i.rd as usize] = rs1 + imm;
 }
