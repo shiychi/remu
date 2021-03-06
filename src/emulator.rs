@@ -17,13 +17,16 @@ impl Emulator {
     }
 
     pub fn start(&mut self) -> Result<()> {
-        // TODO: add debug info
         while self.cpu.pc < self.memory.len() {
+            println!("cpu: {:?}", self.cpu);
             let raw_inst = self.cpu.fetch(&self.memory);
+            println!("raw_inst: 0x{:x?}", raw_inst);
             let inst = self.cpu.decode(raw_inst)?;
-            println!("{:?}", inst);
+            println!("inst: {:?}", inst);
             self.cpu.execute(inst);
+            println!("execute instruction!");
         }
+        println!("cpu: {:?}", self.cpu);
         Ok(())
     }
 }

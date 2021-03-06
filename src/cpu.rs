@@ -2,7 +2,7 @@ use crate::instruction::{self, Instruction};
 use anyhow::Result;
 use thiserror::Error;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Cpu {
     pub register: [u32; 32],
     pub pc: usize,
