@@ -10,7 +10,7 @@ fn main() -> Result<()> {
     binary_file
         .read_to_end(&mut binary)
         .expect("failed to read file");
-    let mut emulator = Emulator::default();
+    let mut emulator = Emulator::new();
     emulator.write_binary(binary);
     emulator.start()?;
     Ok(())

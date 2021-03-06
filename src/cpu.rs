@@ -9,6 +9,10 @@ pub struct Cpu {
 }
 
 impl Cpu {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
     pub fn fetch(&mut self, memory: &[u8]) -> u32 {
         let mut inst: u32 = 0;
         for i in 0..4 {

@@ -8,6 +8,10 @@ pub struct Emulator {
 }
 
 impl Emulator {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
     pub fn write_binary(&mut self, binary_v: Vec<u8>) {
         self.memory = binary_v;
     }

@@ -8,19 +8,19 @@ pub fn parse(raw: u32) -> Result<Instruction> {
 
     match opcode {
         0x33 => {
-            let inst = RTypeInstruction::default(raw);
+            let inst = RTypeInstruction::new(raw);
             inst.parse()
         }
         _ => Err(DecodeError::OpcodeError(opcode as u8).into()),
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Instruction {
     Add(RTypeInstruction),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct RTypeInstruction {
     pub opcode: u8,
     pub funct3: u8,
@@ -30,7 +30,7 @@ pub struct RTypeInstruction {
     pub rs2: u8,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct _ITypeInstruction {
     pub opcode: u8,
     pub funct3: u8,
@@ -39,7 +39,7 @@ pub struct _ITypeInstruction {
     pub imm: u32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct _STypeInstruction {
     pub opcode: u8,
     pub funct3: u8,
@@ -48,7 +48,7 @@ pub struct _STypeInstruction {
     pub imm: u32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct _UTypeInstruction {
     pub opcode: u8,
     pub rd: u8,
@@ -56,7 +56,7 @@ pub struct _UTypeInstruction {
 }
 
 impl RTypeInstruction {
-    pub fn default(raw: u32) -> Self {
+    pub fn new(raw: u32) -> Self {
         let rd: u8 = ((raw >> 7) & 0b11111).try_into().unwrap();
         let funct3: u8 = ((raw >> 12) & 0b111).try_into().unwrap();
         let rs1: u8 = ((raw >> 15) & 0b11111).try_into().unwrap();
