@@ -43,3 +43,38 @@ pub enum DecodeError {
     #[error("Unexpected funct7: {0}")]
     Funct7Error(u8),
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::instruction::*;
+
+    #[test]
+    fn test_add_instruction() {
+        let mut cpu = Cpu::new();
+
+        let inst = cpu.decode(0x01d28fb3).unwrap();
+        assert_eq!(
+            inst,
+            Instruction::Add(RTypeInstruction {
+                opcode: 0x33,
+                funct3: 0,
+                funct7: 0,
+                rd: 31,
+                rs1: 5,
+                rs2: 29
+            })
+        );
+
+        cpu.register[5] = 4; // rs1
+        cpu.register[29] = 2; // rs2
+        cpu.execute(inst);
+        assert_eq!(
+            cpu.register,
+            [
+                0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 2, 0, 6,
+            ]
+        );
+    }
+}

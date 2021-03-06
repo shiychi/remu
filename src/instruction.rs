@@ -2,7 +2,6 @@ use crate::cpu::{Cpu, DecodeError};
 use anyhow::Result;
 use std::convert::TryInto;
 
-// TODO: add tests
 pub fn parse(raw: u32) -> Result<Instruction> {
     let opcode = raw & 0b1111111;
 

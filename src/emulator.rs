@@ -21,6 +21,7 @@ impl Emulator {
         while self.cpu.pc < self.memory.len() {
             let raw_inst = self.cpu.fetch(&self.memory);
             let inst = self.cpu.decode(raw_inst)?;
+            println!("{:?}", inst);
             self.cpu.execute(inst);
         }
         Ok(())
