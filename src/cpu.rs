@@ -31,6 +31,7 @@ impl Cpu {
         match inst {
             Instruction::Add(i) => instruction::add(self, i),
             Instruction::Sub(i) => instruction::sub(self, i),
+            Instruction::Sll(i) => instruction::sll(self, i),
             Instruction::Addi(i) => instruction::addi(self, i),
         }
     }
@@ -105,6 +106,35 @@ mod tests {
             [
                 0, 0, 0, 0, 0, 4, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0,
+            ]
+        );
+    }
+
+    #[test]
+    fn test_sll_instruction() {
+        let mut cpu = Cpu::new();
+
+        let inst = cpu.decode(0x007312b3).unwrap();
+        assert_eq!(
+            inst,
+            Instruction::Sll(RTypeInstruction {
+                opcode: 0x33,
+                funct3: 1,
+                funct7: 0,
+                rd: 5,
+                rs1: 6,
+                rs2: 7
+            })
+        );
+
+        cpu.register[6] = 15; // rs1
+        cpu.register[7] = 2; // rs2
+        cpu.execute(inst);
+        assert_eq!(
+            cpu.register,
+            [
+                0, 0, 0, 0, 0, 60, 15, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0,
             ]
         );
     }

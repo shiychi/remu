@@ -22,6 +22,7 @@ pub fn parse(raw: u32) -> Result<Instruction> {
 pub enum Instruction {
     Add(RTypeInstruction),
     Sub(RTypeInstruction),
+    Sll(RTypeInstruction),
     Addi(ITypeInstruction),
 }
 
@@ -85,6 +86,10 @@ impl RTypeInstruction {
                 32 => Ok(Instruction::Sub(self)),
                 _ => Err(DecodeError::Funct7Error(self.funct7).into()),
             },
+            1 => match self.funct7 {
+                0 => Ok(Instruction::Sll(self)),
+                _ => Err(DecodeError::Funct7Error(self.funct7).into()),
+            },
             _ => Err(DecodeError::Funct3Error(self.funct3).into()),
         }
     }
@@ -124,6 +129,12 @@ pub fn sub(cpu: &mut Cpu, i: RTypeInstruction) {
     let rs1 = cpu.register[i.rs1 as usize];
     let rs2 = cpu.register[i.rs2 as usize];
     cpu.register[i.rd as usize] = rs1 - rs2;
+}
+
+pub fn sll(cpu: &mut Cpu, i: RTypeInstruction) {
+    let rs1 = cpu.register[i.rs1 as usize];
+    let rs2 = cpu.register[i.rs2 as usize];
+    cpu.register[i.rd as usize] = rs1 << (rs2 & 0b11111);
 }
 
 pub fn addi(cpu: &mut Cpu, i: ITypeInstruction) {
